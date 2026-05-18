@@ -26,10 +26,14 @@ export default function Home() {
 
   const checkHealth = async () => {
     try {
-      const response = await axios.get(`${API_URL}/api/health`);
+      const response = await axios.get(`${API_URL}/api/health`, { timeout: 5000 });
       setHealth(response.data);
-    } catch {
-      setHealth({ status: 'error' });
+    } catch (error) {
+      console.error('백엔드 연결 실패:', error);
+      setHealth({ 
+        status: 'error',
+        message: '백엔드 서버에 연결할 수 없습니다. 로컬 서버를 실행해주세요.'
+      });
     }
   };
 
@@ -115,12 +119,17 @@ export default function Home() {
           <div style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'center', flexWrap: 'wrap', gap: '15px' }}>
             <div style={{ display: 'flex', gap: '20px', flexWrap: 'wrap' }}>
               <div style={{ display: 'flex', alignItems: 'center', gap: '8px' }}>
-                <span style={{ fontSize: '20px' }}>🟢</span>
+                <span style={{ fontSize: '20px' }}>{health.status === 'healthy' ? '🟢' : '🔴'}</span>
                 <div>
                   <div style={{ fontSize: '12px', color: '#888' }}>시스템 상태</div>
                   <div style={{ fontWeight: 'bold', color: health.status === 'healthy' ? '#10b981' : '#ef4444' }}>
                     {health.status === 'healthy' ? '정상' : '오류'}
                   </div>
+                  {health.message && (
+                    <div style={{ fontSize: '10px', color: '#ef4444', marginTop: '4px', maxWidth: '200px' }}>
+                      {health.message}
+                    </div>
+                  )}
                 </div>
               </div>
               <div style={{ display: 'flex', alignItems: 'center', gap: '8px' }}>
