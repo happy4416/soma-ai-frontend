@@ -7,7 +7,8 @@
     "build": "next build",
     "start": "next start",
     "lint": "next lint",
-    "deploy": "npm run build && gh-pages -d out"
+    "deploy": "GITHUB_PAGES=true npm run build && gh-pages -d out",
+    "build:github": "GITHUB_PAGES=true npm run build"
   },
   "dependencies": {
     "axios": "^1.7.9",
